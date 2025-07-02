@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Wordle",
-  description: "Tomorrow&apos;s a new day, with a new puzzle. See you then.",
+  description: "Tomorrow's a new day, with a new puzzle. See you then.",
 };
 
 export default function RootLayout({

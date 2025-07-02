@@ -4,16 +4,35 @@ type CellProps = {
   activeRow: number;
   activeCol: number;
   guesses: string[];
+  color: boolean[][];
 };
 
-const Cell = ({ row, col, guesses, activeRow, activeCol }: CellProps) => {
+const Cell = ({
+  row,
+  col,
+  guesses,
+  activeRow,
+  activeCol,
+  color,
+}: CellProps) => {
+  const correctWord = "SNAKE";
+
   return (
     <div
       className={`${
         row == activeRow && col == activeCol
           ? "border-black"
-          : "border-gray-400"
-      } border-2 border-solid size-14 text-black font-semibold text-4xl flex-center`}
+          : "border-gray-200"
+      } border-2 border-solid ${
+        row < activeRow &&
+        (color[row][col] && guesses[row].charAt(col) === correctWord.charAt(col)
+          ? "bg-green-700"
+          : color[row][col] && correctWord.includes(guesses[row].charAt(col))
+          ? "bg-yellow-400"
+          : "bg-gray-500")
+      } size-14 ${
+        row < activeRow ? "text-white border-0" : "text-black"
+      } font-semibold text-4xl flex-center`}
     >
       {guesses[row].charAt(col)}
     </div>
