@@ -2,6 +2,7 @@
 import { words } from "./words";
 import Row from "./_components/Row";
 import { useEffect, useState } from "react";
+import Keyboard from "./_components/Keyboard";
 
 export default function Home() {
   const [activeRow, setActiveRow] = useState(0);
@@ -17,83 +18,86 @@ export default function Home() {
     setCorrectWord(words[Math.floor(Math.random() * words.length)]);
   }, []);
 
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      const letter = e.key.toUpperCase();
+  const handleKeyPress = (letter: string) => {
 
-      if (activeCol > 0 && letter === "BACKSPACE") {
-        setGuesses((prv) => {
-          const updated = [...prv];
-          updated[activeRow] = updated[activeRow].substring(0, activeCol - 1);
-          return updated;
-        });
-        setActiveCol((col) => col - 1);
-      }
-
-      if (activeCol === 5 && letter === "ENTER") {
-        if (correctWord === guesses[activeRow]) {
-          setIsGameOver(true);
-        }
-
-        /* if(!words.includes(guesses[activeRow])) {
-          setActiveCol(0);
-          setGuesses(prv => {
-            const tmp = [...prv];
-            tmp[activeRow] = '';
-            return tmp;
-          })
-          return;
-        } */
-
-        const map = new Map();
-        for (let i = 0; i < 5; i++) {
-          const ch = correctWord.charAt(i);
-          if (map.has(ch)) {
-            map.set(ch, map.get(ch) + 1);
-          } else {
-            map.set(ch, 1);
-          }
-        }
-
-        for (let i = 0; i < 5; i++) {
-          const ch = guesses[activeRow].charAt(i);
-          if (map.has(ch)) {
-            setColor((clr) => {
-              const tmp = [...clr];
-              tmp[activeRow][i] = true;
-              return tmp;
-            });
-            map.set(ch, map.get(ch) - 1);
-            if (map.get(ch) == 0) {
-              map.delete(ch);
-            }
-          }
-        }
-        setActiveRow((row) => row + 1);
-        setActiveCol(0);
-      }
-
-      if (
-        !"QWERTYUIOPASDFGHJKLZXCVBNM".includes(letter) ||
-        activeRow > 5 ||
-        activeCol === 5 ||
-        isGameOver
-      ) {
-        return;
-      }
-
+    if (activeCol > 0 && letter === "BACKSPACE") {
       setGuesses((prv) => {
         const updated = [...prv];
-        updated[activeRow] += letter;
+        updated[activeRow] = updated[activeRow].substring(0, activeCol - 1);
         return updated;
       });
+      setActiveCol((col) => col - 1);
+    }
 
-      setActiveCol((col) => col + 1);
-    };
+    if (activeCol === 5 && letter === "ENTER") {
+      if (correctWord === guesses[activeRow]) {
+        setIsGameOver(true);
+      }
 
-    window.addEventListener("keydown", handleKeyPress);
+      /* if(!words.includes(guesses[activeRow])) {
+        setActiveCol(0);
+        setGuesses(prv => {
+          const tmp = [...prv];
+          tmp[activeRow] = '';
+          return tmp;
+        })
+        return;
+      } */
 
-    return () => window.removeEventListener("keydown", handleKeyPress);
+      const map = new Map();
+      for (let i = 0; i < 5; i++) {
+        const ch = correctWord.charAt(i);
+        if (map.has(ch)) {
+          map.set(ch, map.get(ch) + 1);
+        } else {
+          map.set(ch, 1);
+        }
+      }
+
+      for (let i = 0; i < 5; i++) {
+        const ch = guesses[activeRow].charAt(i);
+        if (map.has(ch)) {
+          setColor((clr) => {
+            const tmp = [...clr];
+            tmp[activeRow][i] = true;
+            return tmp;
+          });
+          map.set(ch, map.get(ch) - 1);
+          if (map.get(ch) == 0) {
+            map.delete(ch);
+          }
+        }
+      }
+      setActiveRow((row) => row + 1);
+      setActiveCol(0);
+    }
+
+    if (
+      !"QWERTYUIOPASDFGHJKLZXCVBNM".includes(letter) ||
+      activeRow > 5 ||
+      activeCol === 5 ||
+      isGameOver
+    ) {
+      return;
+    }
+
+    setGuesses((prv) => {
+      const updated = [...prv];
+      updated[activeRow] += letter;
+      return updated;
+    });
+
+    setActiveCol((col) => col + 1);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    handleKeyPress(e.key.toUpperCase());
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeCol, activeRow, guesses, isGameOver]);
 
   return (
@@ -109,6 +113,7 @@ export default function Home() {
           correctWord={correctWord}
         />
       ))}
+      <Keyboard handleKeyPress={handleKeyPress}/>
     </div>
   );
 }
