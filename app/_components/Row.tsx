@@ -5,10 +5,18 @@ type RowProps = {
   activeRow: number;
   activeCol: number;
   guesses: string[];
-  color: boolean[][]
+  color: boolean[][];
+  correctWord: string;
 };
 
-const Row = ({ row, activeCol, activeRow, guesses, color }: RowProps) => {
+const Row = ({
+  row,
+  color,
+  guesses,
+  activeRow,
+  activeCol,
+  correctWord,
+}: RowProps) => {
   return (
     <div className="grid grid-cols-5 max-w-[400px] gap-2">
       {Array.from({ length: 5 }).map((c, id) => (
@@ -20,6 +28,7 @@ const Row = ({ row, activeCol, activeRow, guesses, color }: RowProps) => {
           guesses={guesses}
           activeRow={activeRow}
           activeCol={activeCol}
+          correctWord={correctWord}
         />
       ))}
     </div>

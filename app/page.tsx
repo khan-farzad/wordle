@@ -1,16 +1,21 @@
 "use client";
+import { words } from "./words";
 import Row from "./_components/Row";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
+  const [correctWord, setCorrectWord] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
   const [color, setColor] = useState<boolean[][]>(
     Array.from({ length: 6 }, () => Array(5).fill(false))
   );
   const [guesses, setGuesses] = useState<string[]>(Array(6).fill(""));
-  const correctWord = "SNAKE";
+
+  useEffect(() => {
+    setCorrectWord(words[Math.floor(Math.random() * words.length)]);
+  }, []);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -29,6 +34,16 @@ export default function Home() {
         if (correctWord === guesses[activeRow]) {
           setIsGameOver(true);
         }
+
+        /* if(!words.includes(guesses[activeRow])) {
+          setActiveCol(0);
+          setGuesses(prv => {
+            const tmp = [...prv];
+            tmp[activeRow] = '';
+            return tmp;
+          })
+          return;
+        } */
 
         const map = new Map();
         for (let i = 0; i < 5; i++) {
@@ -91,6 +106,7 @@ export default function Home() {
           guesses={guesses}
           activeRow={activeRow}
           activeCol={activeCol}
+          correctWord={correctWord}
         />
       ))}
     </div>

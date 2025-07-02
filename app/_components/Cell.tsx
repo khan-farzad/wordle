@@ -5,18 +5,18 @@ type CellProps = {
   activeCol: number;
   guesses: string[];
   color: boolean[][];
+  correctWord: string;
 };
 
 const Cell = ({
   row,
   col,
+  color,
   guesses,
   activeRow,
   activeCol,
-  color,
+  correctWord,
 }: CellProps) => {
-  const correctWord = "SNAKE";
-
   return (
     <div
       className={`${
